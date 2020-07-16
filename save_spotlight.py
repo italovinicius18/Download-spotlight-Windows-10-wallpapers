@@ -1,4 +1,5 @@
 import os
+import random
 import shutil
 import struct
 import imghdr
@@ -22,8 +23,14 @@ def copyFilesAndCreateDestFolder(path,userprofile,destinationFolder):
 def renameFilesToJPG(destinationFolder):
     for file in os.listdir(destinationFolder):
         oldName = destinationFolder+'/'+file
-        newName = oldName+'.jpg'
-        os.rename(oldName,newName)
+        try:
+            newName = oldName+'.jpg'
+            os.rename(oldName,newName)
+        except FileExistsError:
+            oldName = destinationFolder+'/'+file
+            file = ''.join(random.sample(file,len(file)))
+            newName = destinationFolder+'/'+file+'.jpg'
+            os.rename(oldName,newName)
 
 def getImageSize(fname):
     with open(fname, 'rb') as fhandle:
